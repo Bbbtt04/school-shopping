@@ -12,4 +12,5 @@ export const typeormConifg: TypeOrmModuleOptions = {
   username,
   entities: [__dirname + '/../**/*.entity.{js, ts}'],
   autoLoadEntities: true, // 自动加载实体
+  synchronize: true, // 自动同步数据库
 };
