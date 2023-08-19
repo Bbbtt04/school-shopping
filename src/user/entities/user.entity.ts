@@ -51,11 +51,11 @@ export class User {
 
   @Column({
     type: 'tinyint',
-    default: 0,
-    comment: '0:未删除 1:已删除',
+    default: false,
+    comment: '软删除',
     nullable: true,
   })
-  is_del: number;
+  is_del: boolean;
 
   @CreateDateColumn()
   created_at: Date;

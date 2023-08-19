@@ -11,4 +11,5 @@ export default {
     synchronize: true, // 自动创建表
     logging: true, // 打印日志
   },
+  USER_SECRET_KEY: process.env.USER_SECRET_KEY, // 加密秘钥
 };
