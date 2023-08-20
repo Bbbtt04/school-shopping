@@ -20,7 +20,7 @@ export class Product {
   @Column()
   price: number;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   /**
@@ -32,7 +32,7 @@ export class Product {
   /**
    * 图片
    */
-  @OneToMany(() => ProductImg, (productImg) => productImg.product_id)
+  @OneToMany(() => ProductImg, (productImg) => productImg.productId)
   imgs: ProductImg[];
 
   @CreateDateColumn()
@@ -63,9 +63,6 @@ export class ProductImg {
   @Column()
   url: string;
 
-  @Column()
-  product_id: number;
-
   @Column({
     type: 'enum',
     enum: ProductImgType,
@@ -73,9 +70,6 @@ export class ProductImg {
   })
   type: ProductImgType;
 
-  @CreateDateColumn()
-  create_at: Date;
-
-  @UpdateDateColumn()
-  update_at: Date;
+  @ManyToOne(() => Product, (product) => product.imgs)
+  productId: Product;
 }
