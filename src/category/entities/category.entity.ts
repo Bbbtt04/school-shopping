@@ -16,7 +16,7 @@ export class Category {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   parent_id: number;
 
   @OneToMany(() => Product, (product) => product.category)
