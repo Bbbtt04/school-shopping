@@ -9,5 +9,8 @@ export class CreateProductDto {
   @IsNumber()
   price: number;
 
-  productImgs: string[];
+  productImgs: {
+    thumbnail: string[];
+    detail: string[];
+  };
 }

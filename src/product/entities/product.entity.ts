@@ -30,10 +30,10 @@ export class Product {
   category: Category;
 
   /**
-   * 图片
+   * 商品图片
    */
-  @OneToMany(() => ProductImg, (productImg) => productImg.productId)
-  imgs: ProductImg[];
+  @OneToMany(() => ProductImg, (img) => img.product)
+  product_imgs: ProductImg[];
 
   @CreateDateColumn()
   create_at: Date;
@@ -70,6 +70,6 @@ export class ProductImg {
   })
   type: ProductImgType;
 
-  @ManyToOne(() => Product, (product) => product.imgs)
-  productId: Product;
+  @ManyToOne(() => Product, (product) => product.product_imgs)
+  product: Product;
 }

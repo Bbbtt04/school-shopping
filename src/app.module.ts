@@ -8,7 +8,12 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeormConifg), UserModule, ProductModule, CategoryModule],
+  imports: [
+    TypeOrmModule.forRoot(typeormConifg),
+    UserModule,
+    ProductModule,
+    CategoryModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
