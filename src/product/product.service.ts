@@ -4,6 +4,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product, ProductImg, ProductImgType } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { SearchProductDto } from './dto/search-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -28,14 +29,18 @@ export class ProductService {
   // }
 
   async create(createProductDto: CreateProductDto) {
-    const { productImgs, name } = createProductDto;
+    const { productImgs, name, categoryId } = createProductDto;
     const exitProduct = await this.productRepository.findOne({
       where: { name },
     });
     if (exitProduct) {
       throw new HttpException('商品已存在', HttpStatus.BAD_REQUEST);
     }
-    const newProduct = await this.productRepository.create(createProductDto);
+    const newProduct = await this.productRepository.create({
+      name: createProductDto.name,
+      price: createProductDto.price,
+      description: createProductDto.description,
+    });
     await this.productRepository.save(newProduct);
     // 保存商品图片
     if (productImgs) {
@@ -61,20 +66,39 @@ export class ProductService {
         });
       }
     }
+    // 分类
+    if (categoryId) {
+      await this.productRepository
+        .createQueryBuilder()
+        .relation(Product, 'category')
+        .of(newProduct)
+        .set(categoryId);
+    }
 
     const res = await this.productRepository.findOne({
       where: { id: newProduct.id },
-      relations: ['product_imgs'],
+      relations: ['product_imgs', 'category'],
     });
     return this.formatProductRes([res]);
   }
 
-  async findAll() {
+  async findAll(searchProductDto: SearchProductDto) {
+    console.log(searchProductDto);
+    const { categoryId } = searchProductDto;
+
+    const query = this.productRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.product_imgs', 'product_imgs')
+      .leftJoinAndSelect('p.category', 'category');
+
+    if (categoryId) {
+      query.andWhere('category.id = :categoryId', { categoryId });
+    }
+
     // 还要查询商品图片
-    const res = await this.productRepository.find({
-      relations: ['product_imgs'],
-    });
-    return this.formatProductRes(res);
+    const products = await query.getMany();
+
+    return this.formatProductRes(products);
   }
 
   async findOne(id: number) {

@@ -13,4 +13,10 @@ export class CreateProductDto {
     thumbnail: string[];
     detail: string[];
   };
+
+  @IsNotEmpty({ message: '商品描述不能为空' })
+  @IsString()
+  description: string;
+
+  categoryId: number;
 }
